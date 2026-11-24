@@ -23,7 +23,21 @@ def resolve_output_path():
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), "entry.txt")
 
 
+def validate_line(line):
+    if not isinstance(line, str):
+        raise ValueError("entry line must be a string")
+    if not line.strip():
+        raise ValueError("entry line must not be empty or whitespace-only")
+    if "\n" in line or "\r" in line:
+        raise ValueError("entry line must be a single line without embedded newlines")
+    if not 1 <= len(line) <= 200:
+        raise ValueError(
+            "entry line must be 1-200 characters long, got %d" % len(line)
+        )
+
+
 def main():
+    validate_line(LINE)
     path = resolve_output_path()
     parent = os.path.dirname(path)
     if parent:
